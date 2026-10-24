@@ -175,7 +175,7 @@
       width: 130px;
     }
 
-    /* ★ 圓形底座：純白底 + 復古虛線框，絕無深灰底塊 */
+    /* 圓形底座 */
     .circle-slot {
       width: 118px;
       height: 118px;
@@ -187,16 +187,16 @@
       justify-content: center;
       position: relative;
       overflow: hidden;
-      transition: transform 0.3s ease, border-color 0.3s ease;
+      transition: transform 0.3s ease;
       margin-bottom: 10px;
-      box-shadow: none;
     }
 
-    /* 未點亮：透明 PNG 轉為乾淨的黑白浮水印貼在白底上 */
+    /* 未點亮：加入 mix-blend-mode: multiply，自動把圖片帶有的白底變成全透明！ */
     .circle-slot img {
       width: 86%;
       height: 86%;
       object-fit: contain;
+      mix-blend-mode: multiply; 
       filter: grayscale(100%) opacity(0.4);
       transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       user-select: none;
@@ -212,6 +212,7 @@
     .sticker-item.unlocked .circle-slot img {
       width: 104%;
       height: 104%;
+      mix-blend-mode: multiply;
       filter: grayscale(0%) opacity(1);
       transform: scale(1.04);
     }
@@ -311,10 +312,12 @@
       width: 96%;
       height: 96%;
       object-fit: contain;
+      mix-blend-mode: multiply;
     }
     .modal-stamp-wrap.locked img {
       width: 86%;
       height: 86%;
+      mix-blend-mode: multiply;
       filter: grayscale(100%) opacity(0.4);
     }
 
