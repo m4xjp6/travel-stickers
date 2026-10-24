@@ -8,7 +8,6 @@
     :root {
       --bg-page: #F9F8F6;
       --bg-card: #FFFFFF;
-      --slot-locked: #EDEDEB;    /* MapSprink 未點亮時的淺灰圓底 */
       --accent-yellow: #FFE599;
       --morandi-green: #7A8B7B;
       --text-main: #3D3B38;
@@ -36,13 +35,8 @@
       font-size: 14px;
       font-weight: 600;
       text-align: center;
-      animation: slideDown 0.4s ease-out;
     }
     .unlock-toast.show { display: block; }
-    @keyframes slideDown {
-      from { transform: translateY(-15px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
 
     .header-card {
       background: var(--bg-card);
@@ -82,7 +76,7 @@
     .progress-box .count { font-size: 22px; font-weight: 800; color: var(--morandi-green); }
     .progress-box .label { font-size: 12px; color: var(--text-muted); }
 
-    /* 第一層：主分頁標籤列 */
+    /* 主分頁標籤列 */
     .filter-bar {
       display: flex;
       gap: 8px;
@@ -111,7 +105,7 @@
       border-color: var(--morandi-green);
     }
 
-    /* 第二層：子分頁標籤列 */
+    /* 子分頁標籤列 */
     .sub-filter-bar {
       display: none;
       gap: 8px;
@@ -152,15 +146,15 @@
       font-weight: 700;
     }
 
-    /* 貼紙圖鑑網格（純白底色，讓 multiply 白底 100% 隱形！） */
+    /* 貼紙圖鑑網格 */
     .sticker-grid {
-      background: #FFFFFF;
+      background: var(--bg-card);
       border-radius: 24px;
-      padding: 36px 16px;
+      padding: 36px 20px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 36px 16px;
+      gap: 32px 16px;
       justify-items: center;
       min-height: 220px;
     }
@@ -181,75 +175,67 @@
       width: 130px;
     }
 
-    /* ★ MapSprink 圓形底座：未點亮時是淺灰圓底；點亮後圓底變透明，讓彩繪貼紙無邊框完整呈現！ */
+    /* ★ 圓形底座：純白底 + 復古虛線框，絕無深灰底塊 */
     .circle-slot {
-      width: 112px;
-      height: 112px;
+      width: 118px;
+      height: 118px;
       border-radius: 50%;
-      background-color: var(--slot-locked);
+      background-color: #FFFFFF;
+      border: 1.5px dashed #D5D0C5;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      transition: background-color 0.35s ease, transform 0.35s ease;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
       margin-bottom: 10px;
-      border: none; /* 移除虛線框 */
+      box-shadow: none;
     }
 
-    /* 未點亮狀態：灰階黑白半透明浮水印，無任何陰影與方框 */
+    /* 未點亮：透明 PNG 轉為乾淨的黑白浮水印貼在白底上 */
     .circle-slot img {
       width: 86%;
       height: 86%;
       object-fit: contain;
-      mix-blend-mode: multiply; /* ★ 自動讓圖片的白色方形底色變成全透明！ */
-      filter: grayscale(100%) opacity(0.32); /* 絕不加 drop-shadow，徹底消滅方形陰影！ */
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: grayscale(100%) opacity(0.4);
+      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       user-select: none;
     }
 
-    /* ★ 已點亮狀態：灰色圓底直接消失（透明），只留下全彩的插畫貼紙直接印在白底上！ */
+    /* 已點亮：虛線框隱藏，呈現 100% 全彩貼紙 */
     .sticker-item.unlocked .circle-slot {
-      background-color: transparent;
+      background-color: #FFFFFF;
+      border: 1.5px dashed transparent;
+      overflow: visible;
     }
 
     .sticker-item.unlocked .circle-slot img {
-      width: 108%;
-      height: 108%;
-      filter: grayscale(0%) opacity(1); /* 無 drop-shadow，完全不會有方框跟陰影！ */
+      width: 104%;
+      height: 104%;
+      filter: grayscale(0%) opacity(1);
       transform: scale(1.04);
     }
 
     .sticker-item:hover .circle-slot {
-      transform: translateY(-4px);
+      transform: translateY(-3px);
     }
 
-    /* 尚未上傳圖片時的簡潔灰色預覽字（不畫虛線圓框） */
     .placeholder-stamp {
-      padding: 10px;
-      text-align: center;
       font-size: 12px;
-      font-weight: 600;
-      color: #A5A19A;
+      font-weight: 500;
+      color: #888;
+      text-align: center;
+      padding: 10px;
       line-height: 1.35;
-    }
-    .sticker-item.unlocked .placeholder-stamp {
-      color: var(--morandi-green);
-      background: #F4F7F4;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     @keyframes popIn {
-      0% { transform: scale(1.6); opacity: 0; }
-      60% { transform: scale(0.94); opacity: 1; }
+      0% { transform: scale(1.5); opacity: 0; }
+      70% { transform: scale(0.95); opacity: 1; }
       100% { transform: scale(1.04); opacity: 1; }
     }
     .sticker-item.just-unlocked .circle-slot img {
-      animation: popIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation: popIn 0.5s ease-out forwards;
     }
 
     .sticker-title {
@@ -268,18 +254,18 @@
       font-size: 11.5px;
       color: var(--morandi-green);
       font-weight: 600;
-      margin-top: 2px;
+      margin-top: 3px;
     }
     .sticker-item:not(.unlocked) .sticker-date {
       color: var(--text-muted);
       font-weight: 400;
     }
 
-    /* 彈出詳情視窗（純白背景，無方框無陰影） */
+    /* 彈出詳情視窗 */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(40, 38, 35, 0.45);
+      background: rgba(40, 38, 35, 0.5);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
@@ -296,7 +282,7 @@
       width: 100%;
       padding: 28px 22px 22px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
     }
     .modal-badge {
       display: inline-block;
@@ -307,32 +293,29 @@
       margin-bottom: 12px;
     }
     .modal-badge.unlocked { background: var(--accent-yellow); color: #5C4B1B; }
-    .modal-badge.locked { background: #EEE; color: #777; }
+    .modal-badge.locked { background: #E5E2DA; color: #777; }
 
     .modal-stamp-wrap {
       width: 150px;
       height: 150px;
-      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1.5px dashed #D5D0C5;
+      margin: 0 auto 14px;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
     .modal-stamp-wrap img {
-      width: 100%;
-      height: 100%;
+      width: 96%;
+      height: 96%;
       object-fit: contain;
-      mix-blend-mode: multiply;
-    }
-    .modal-stamp-wrap.locked {
-      background: var(--slot-locked);
-      border-radius: 50%;
-      width: 130px;
-      height: 130px;
     }
     .modal-stamp-wrap.locked img {
-      width: 84%;
-      height: 84%;
-      filter: grayscale(100%) opacity(0.32);
+      width: 86%;
+      height: 86%;
+      filter: grayscale(100%) opacity(0.4);
     }
 
     .modal-subcat {
@@ -488,7 +471,8 @@
       id: "namheong",
       title: "南香茶餐室",
       category: ["馬來西亞", "遊記"],
-      image: "怡保-南香茶餐室.png",
+      subCategory: "馬來西亞怡保慢旅",
+      image: "南香茶餐室.png",
       desc: "怡保舊街場的早晨香氣，一杯濃醇白咖啡配烤咖央吐司與半熟蛋。",
       articleUrl: "https://vocus.cc/article/6ab0d9effd897800010504cb"
     }
@@ -520,47 +504,6 @@
     return false;
   }
 
-  // ★ 自動去除圖片外圍白色方形背景（讓有白底的圖片在灰色圓圈上也完全透明無方框！）
-  function removeWhiteBox(imgEl) {
-    if (imgEl.dataset.cleaned) return;
-    imgEl.dataset.cleaned = "true";
-    try {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const w = imgEl.naturalWidth;
-      const h = imgEl.naturalHeight;
-      if (!w || !h) return;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(imgEl, 0, 0);
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-
-      // 從圖片四個角落使用 Flood Fill 把外圍相連的白色背景轉為 100% 透明
-      const visited = new Uint8Array(w * h);
-      const stack = [0, w - 1, (h - 1) * w, (h - 1) * w + (w - 1)];
-      const isNearWhite = (idx) => data[idx] > 240 && data[idx + 1] > 240 && data[idx + 2] > 240;
-
-      while (stack.length > 0) {
-        const p = stack.pop();
-        if (p < 0 || p >= w * h || visited[p]) continue;
-        const idx = p * 4;
-        if (data[idx + 3] === 0 || isNearWhite(idx)) {
-          visited[p] = 1;
-          data[idx + 3] = 0; // 設為全透明
-          const x = p % w;
-          const y = (p / w) | 0;
-          if (x > 0) stack.push(p - 1);
-          if (x < w - 1) stack.push(p + 1);
-          if (y > 0) stack.push(p - w);
-          if (y < h - 1) stack.push(p + w);
-        }
-      }
-      ctx.putImageData(imgData, 0, 0);
-      imgEl.src = canvas.toDataURL("image/png");
-    } catch (e) {}
-  }
-
   function renderFilterBar() {
     const bar = document.getElementById("filterBar");
     bar.innerHTML = "";
@@ -582,6 +525,7 @@
   function renderSubFilterBar() {
     const subBar = document.getElementById("subFilterBar");
     subBar.innerHTML = "";
+
     if (currentFilter === "全部足跡") {
       subBar.classList.remove("show");
       return;
@@ -594,10 +538,11 @@
       subBar.classList.add("show");
       const label = document.createElement("span");
       label.className = "sub-filter-label";
-      label.textContent = "📂 系列：";
+      label.textContent = "📂 系列篩選：";
       subBar.appendChild(label);
 
-      ["全部", ...subCats].forEach(sub => {
+      const allSubCats = ["全部", ...subCats];
+      allSubCats.forEach(sub => {
         const btn = document.createElement("button");
         btn.className = `sub-filter-btn ${sub === currentSubFilter ? "active" : ""}`;
         btn.textContent = sub === "全部" ? `全部${currentFilter}` : sub;
@@ -646,7 +591,7 @@
 
         card.innerHTML = `
           <div class="circle-slot">
-            <img src="${item.image}" alt="${item.title}" onload="removeWhiteBox(this)" onerror="handleImgError(this, '${item.image}', '${item.title}')">
+            <img src="${encodeURI(item.image)}" alt="${item.title}" onerror="handleImgError(this, '${item.image}', '${item.title}')">
           </div>
           <div class="sticker-title">${item.title}</div>
           <div class="sticker-date">${isUnlocked ? collected[item.id] : "尚未點亮"}</div>
@@ -669,9 +614,9 @@
     badge.textContent = isAutoPop ? "🎉 恭喜點亮新記憶貼紙！" : (isUnlocked ? `✓ 已點亮於 ${unlockDate}` : "🔒 尚未點亮");
 
     wrap.className = `modal-stamp-wrap ${isUnlocked ? "" : "locked"}`;
-    wrap.innerHTML = `<img src="${item.image}" alt="${item.title}" onload="removeWhiteBox(this)" onerror="handleImgError(this, '${item.image}', '${item.title}')">`;
+    wrap.innerHTML = `<img src="${encodeURI(item.image)}" alt="${item.title}" onerror="handleImgError(this, '${item.image}', '${item.title}')">`;
     
-    subcatEl.textContent = item.subCategory ? `📖 ${item.subCategory}` : "";
+    subcatEl.textContent = item.subCategory ? `📖 系列：${item.subCategory}` : "";
     document.getElementById("modalTitle").textContent = item.title;
 
     const cleanDesc = (item.desc && item.desc.trim()) ? item.desc : `紀錄於《${item.title}》的美好旅途記憶。`;
