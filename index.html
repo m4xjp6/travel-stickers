@@ -286,9 +286,11 @@
   <!-- 國家/主題分類篩選 -->
   <div class="filter-bar" id="filterBar">
     <button class="filter-btn active" onclick="filterCategory('all', this)">全部足跡</button>
-    <button class="filter-btn" onclick="filterCategory('馬來西亞', this)">馬來西亞</button>
+    <button class="filter-btn" onclick="filterCategory('遊記', this)">遊記</button>
     <button class="filter-btn" onclick="filterCategory('台灣', this)">台灣</button>
     <button class="filter-btn" onclick="filterCategory('日本', this)">日本</button>
+    <button class="filter-btn" onclick="filterCategory('馬來西亞', this)">馬來西亞</button>
+    <button class="filter-btn" onclick="filterCategory('新加坡', this)">新加坡</button>    
   </div>
 
   <!-- MapSprink 風格圓形陣列 -->
@@ -313,11 +315,19 @@
   const STICKERS = [
     {
       id: "namheong",                      // 網址參數代號 (?collect=namheong)
+      title: "日本東北冬季自由行EP01",                 // 顯示在圓圈下方的名稱
+      category: "馬來西亞",                // 分類標籤
+      image: "日本東北冬季自由行 EP01｜出國啟程.png",      // 圖片路徑 (放在同資料夾或填圖片網址)
+      desc: "啟程踏入銀白國度，從出境整裝到迎著冬日寒風抵達東北的第一站序曲。",
+      articleUrl: "https://vocus.cc/article/6ab11965fd8978000116fd53"     // 對應的方格子文章網址
+    },
+    {
+      id: "namheong",                      // 網址參數代號 (?collect=namheong)
       title: "南香茶餐室",                 // 顯示在圓圈下方的名稱
       category: "馬來西亞",                // 分類標籤
       image: "南香茶餐室.png",      // 圖片路徑 (放在同資料夾或填圖片網址)
       desc: "怡保舊街場的早晨香氣，一杯濃醇白咖啡配烤咖央吐司與半熟蛋。",
-      articleUrl: "https://vocus.cc/"     // 對應的方格子文章網址
+      articleUrl: "https://vocus.cc/article/6ac6f0e8fd8978000177c75e"     // 對應的方格子文章網址
     },
     {
       id: "taipei101",
