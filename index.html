@@ -8,11 +8,9 @@
     :root {
       --bg-page: #F9F8F6;
       --bg-card: #FFFFFF;
-      --slot-locked: #EFECE6;    /* 未蓋章：溫潤手賬紙灰圓底 */
-      --slot-unlocked: #FAF3E0;  /* 已蓋章：米黃手賬紙底 */
-      --accent-yellow: #FFE599;  /* 主題暖黃 */
-      --morandi-green: #7A8B7B;  /* 莫蘭迪綠 */
-      --stamp-red: #B85D43;      /* 復古印泥磚紅 */
+      --slot-locked: #EDEDEB;    /* MapSprink 未點亮時的淺灰圓底 */
+      --accent-yellow: #FFE599;
+      --morandi-green: #7A8B7B;
       --text-main: #3D3B38;
       --text-muted: #9A9690;
     }
@@ -28,7 +26,6 @@
 
     .container { max-width: 820px; margin: 0 auto; }
 
-    /* 點亮成功頂部通知橫幅 */
     .unlock-toast {
       display: none;
       background: var(--morandi-green);
@@ -39,7 +36,6 @@
       font-size: 14px;
       font-weight: 600;
       text-align: center;
-      box-shadow: 0 6px 20px rgba(122, 139, 123, 0.3);
       animation: slideDown 0.4s ease-out;
     }
     .unlock-toast.show { display: block; }
@@ -113,10 +109,9 @@
       background: var(--morandi-green);
       color: #FFF;
       border-color: var(--morandi-green);
-      box-shadow: 0 4px 12px rgba(122, 139, 123, 0.25);
     }
 
-    /* 第二層：子分頁標籤列（例如點選「遊記」時自動展開各系列遊記） */
+    /* 第二層：子分頁標籤列 */
     .sub-filter-bar {
       display: none;
       gap: 8px;
@@ -127,15 +122,9 @@
       overflow-x: auto;
       scrollbar-width: none;
       align-items: center;
-      animation: fadeIn 0.25s ease;
     }
     .sub-filter-bar.show { display: flex; }
     .sub-filter-bar::-webkit-scrollbar { display: none; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
 
     .sub-filter-label {
       font-size: 12px;
@@ -155,25 +144,23 @@
       font-weight: 500;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s;
     }
     .sub-filter-btn.active {
       background: var(--bg-card);
       color: var(--morandi-green);
       border-color: var(--morandi-green);
       font-weight: 700;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
-    /* 集章網格 */
+    /* 貼紙圖鑑網格（純白底色，讓 multiply 白底 100% 隱形！） */
     .sticker-grid {
-      background: var(--bg-card);
+      background: #FFFFFF;
       border-radius: 24px;
-      padding: 32px 16px;
+      padding: 36px 16px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 32px 16px;
+      gap: 36px 16px;
       justify-items: center;
       min-height: 220px;
     }
@@ -194,79 +181,75 @@
       width: 130px;
     }
 
-    /* 圓形蓋章槽：裁切超出圓圈的方形白邊 */
+    /* ★ MapSprink 圓形底座：未點亮時是淺灰圓底；點亮後圓底變透明，讓彩繪貼紙無邊框完整呈現！ */
     .circle-slot {
-      width: 114px;
-      height: 114px;
+      width: 112px;
+      height: 112px;
       border-radius: 50%;
       background-color: var(--slot-locked);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
+      transition: background-color 0.35s ease, transform 0.35s ease;
       margin-bottom: 10px;
-      border: 1.5px dashed #D5D0C5;
+      border: none; /* 移除虛線框 */
     }
 
-    /* 圖片本體：使用 multiply 自動消除圖片白底，產生真實蓋章融合感 */
+    /* 未點亮狀態：灰階黑白半透明浮水印，無任何陰影與方框 */
     .circle-slot img {
-      width: 92%;
-      height: 92%;
+      width: 86%;
+      height: 86%;
       object-fit: contain;
-      mix-blend-mode: multiply;
-      filter: grayscale(100%) opacity(0.32);
-      transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      mix-blend-mode: multiply; /* ★ 自動讓圖片的白色方形底色變成全透明！ */
+      filter: grayscale(100%) opacity(0.32); /* 絕不加 drop-shadow，徹底消滅方形陰影！ */
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       user-select: none;
     }
 
-    /* 已點亮（蓋章後）狀態 */
+    /* ★ 已點亮狀態：灰色圓底直接消失（透明），只留下全彩的插畫貼紙直接印在白底上！ */
     .sticker-item.unlocked .circle-slot {
-      background-color: var(--slot-unlocked);
-      border: 2px dashed rgba(184, 93, 67, 0.45);
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+      background-color: transparent;
     }
 
     .sticker-item.unlocked .circle-slot img {
-      width: 96%;
-      height: 96%;
-      filter: grayscale(0%) opacity(0.96) contrast(1.05);
-      transform: rotate(-5deg) scale(1.02);
+      width: 108%;
+      height: 108%;
+      filter: grayscale(0%) opacity(1); /* 無 drop-shadow，完全不會有方框跟陰影！ */
+      transform: scale(1.04);
     }
 
-    /* 尚未上傳圖片時的純文字虛線章（防止手機出現藍色問號破圖） */
+    .sticker-item:hover .circle-slot {
+      transform: translateY(-4px);
+    }
+
+    /* 尚未上傳圖片時的簡潔灰色預覽字（不畫虛線圓框） */
     .placeholder-stamp {
-      width: 82px;
-      height: 82px;
-      border-radius: 50%;
-      border: 1.5px dashed #BDB8AD;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
+      padding: 10px;
       text-align: center;
       font-size: 12px;
       font-weight: 600;
-      color: #9E998E;
+      color: #A5A19A;
       line-height: 1.35;
     }
     .sticker-item.unlocked .placeholder-stamp {
-      border: 2px solid var(--stamp-red);
-      color: var(--stamp-red);
-      transform: rotate(-8deg);
+      color: var(--morandi-green);
+      background: #F4F7F4;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* 蓋章瞬間的下壓動畫 */
-    @keyframes stampDown {
-      0% { transform: scale(2.2) rotate(12deg); opacity: 0; }
-      50% { transform: scale(0.9) rotate(-7deg); opacity: 1; }
-      75% { transform: scale(1.05) rotate(-4deg); }
-      100% { transform: scale(1.02) rotate(-5deg); opacity: 0.96; }
+    @keyframes popIn {
+      0% { transform: scale(1.6); opacity: 0; }
+      60% { transform: scale(0.94); opacity: 1; }
+      100% { transform: scale(1.04); opacity: 1; }
     }
-    .sticker-item.just-unlocked .circle-slot img,
-    .sticker-item.just-unlocked .placeholder-stamp {
-      animation: stampDown 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    .sticker-item.just-unlocked .circle-slot img {
+      animation: popIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
     .sticker-title {
@@ -283,22 +266,20 @@
 
     .sticker-date {
       font-size: 11.5px;
-      color: var(--stamp-red);
+      color: var(--morandi-green);
       font-weight: 600;
-      margin-top: 3px;
-      font-family: monospace;
+      margin-top: 2px;
     }
     .sticker-item:not(.unlocked) .sticker-date {
       color: var(--text-muted);
       font-weight: 400;
-      font-family: inherit;
     }
 
-    /* 彈出詳情視窗 */
+    /* 彈出詳情視窗（純白背景，無方框無陰影） */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(40, 38, 35, 0.5);
+      background: rgba(40, 38, 35, 0.45);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
@@ -309,13 +290,13 @@
     .modal-backdrop.show { display: flex; }
 
     .modal-box {
-      background: #FAF8F5;
+      background: #FFFFFF;
       border-radius: 24px;
       max-width: 350px;
       width: 100%;
-      padding: 26px 22px 22px;
+      padding: 28px 22px 22px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
     }
     .modal-badge {
       display: inline-block;
@@ -326,34 +307,32 @@
       margin-bottom: 12px;
     }
     .modal-badge.unlocked { background: var(--accent-yellow); color: #5C4B1B; }
-    .modal-badge.locked { background: #E5E3DC; color: #777; }
+    .modal-badge.locked { background: #EEE; color: #777; }
 
     .modal-stamp-wrap {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: var(--slot-unlocked);
-      border: 2px dashed rgba(184, 93, 67, 0.4);
-      margin: 0 auto 14px;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
     .modal-stamp-wrap img {
-      width: 94%;
-      height: 94%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
       mix-blend-mode: multiply;
-      transform: rotate(-5deg);
     }
     .modal-stamp-wrap.locked {
       background: var(--slot-locked);
-      border-color: #D5D0C5;
+      border-radius: 50%;
+      width: 130px;
+      height: 130px;
     }
     .modal-stamp-wrap.locked img {
-      filter: grayscale(100%) opacity(0.35);
-      transform: none;
+      width: 84%;
+      height: 84%;
+      filter: grayscale(100%) opacity(0.32);
     }
 
     .modal-subcat {
@@ -389,7 +368,6 @@
 <body>
 
 <div class="container">
-  <!-- 點亮成功頂部橫幅 -->
   <div class="unlock-toast" id="unlockToast"></div>
 
   <header class="header-card">
@@ -404,17 +382,11 @@
     </div>
   </header>
 
-  <!-- 第一層：主分頁 -->
   <div class="filter-bar" id="filterBar"></div>
-
-  <!-- 第二層：子分頁（當該主分頁底下有多個系列時自動浮現！） -->
   <div class="sub-filter-bar" id="subFilterBar"></div>
-
-  <!-- 印章網格 -->
   <main class="sticker-grid" id="stickerGrid"></main>
 </div>
 
-<!-- 詳情彈窗 -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div id="modalStatusBadge" class="modal-badge"></div>
@@ -428,24 +400,14 @@
 </div>
 
 <script>
-  // =========================================================================
-  // ★ 1. 第一層主分頁設定（依照你的需求設定為這 6 個）
-  // =========================================================================
   const CATEGORIES = ["全部足跡", "遊記", "台灣", "日本", "馬來西亞", "新加坡"];
 
-  // =========================================================================
-  // ★ 2. 印章與遊記資料庫
-  // 💡 小秘訣：
-  // - category: 可寫單一分類（如 "遊記"），或陣列 ["遊記", "日本"] 讓它同時出現在兩個主分頁！
-  // - subCategory: 選填！只要填了系列名稱（例如 "日本東北冬季自由行"），
-  //   點進「遊記」分頁時，就會自動出現第二層子分頁按鈕！
-  // =========================================================================
   const STICKERS = [
     {
       id: "tohoku-winter-ep01",
       title: "日本東北冬季自由行 EP 01",
-      category: ["遊記", "日本"],                // 同時出現在「遊記」與「日本」分頁
-      subCategory: "日本東北冬季自由行",          // ★ 自動歸類在「遊記」底下的子分頁！
+      category: ["遊記", "日本"],
+      subCategory: "日本東北冬季自由行",
       image: "日本東北冬季自由行EP01｜出國啟程.png",
       desc: "啟程踏入銀白國度，從出境整裝到迎著冬日寒風抵達東北的第一站序曲。",
       articleUrl: "https://vocus.cc/article/6ab0d9effd897800010504cb"
@@ -526,8 +488,7 @@
       id: "namheong",
       title: "南香茶餐室",
       category: ["馬來西亞", "遊記"],
-      subCategory: "馬來西亞怡保慢旅",
-      image: "南香茶餐室.png",
+      image: "怡保-南香茶餐室.png",
       desc: "怡保舊街場的早晨香氣，一杯濃醇白咖啡配烤咖央吐司與半熟蛋。",
       articleUrl: "https://vocus.cc/article/6ab0d9effd897800010504cb"
     }
@@ -552,16 +513,54 @@
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
   }
 
-  // 判斷某張貼紙是否屬於某個主分頁（相容你原本寫的 category 字串、陣列或 tags）
   function belongsToCategory(item, cat) {
     if (cat === "全部足跡") return true;
     if (Array.isArray(item.category) && item.category.includes(cat)) return true;
     if (item.category === cat) return true;
-    if (Array.isArray(item.tags) && item.tags.includes(cat)) return true;
     return false;
   }
 
-  // 渲染第一層主分頁
+  // ★ 自動去除圖片外圍白色方形背景（讓有白底的圖片在灰色圓圈上也完全透明無方框！）
+  function removeWhiteBox(imgEl) {
+    if (imgEl.dataset.cleaned) return;
+    imgEl.dataset.cleaned = "true";
+    try {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const w = imgEl.naturalWidth;
+      const h = imgEl.naturalHeight;
+      if (!w || !h) return;
+      canvas.width = w;
+      canvas.height = h;
+      ctx.drawImage(imgEl, 0, 0);
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+
+      // 從圖片四個角落使用 Flood Fill 把外圍相連的白色背景轉為 100% 透明
+      const visited = new Uint8Array(w * h);
+      const stack = [0, w - 1, (h - 1) * w, (h - 1) * w + (w - 1)];
+      const isNearWhite = (idx) => data[idx] > 240 && data[idx + 1] > 240 && data[idx + 2] > 240;
+
+      while (stack.length > 0) {
+        const p = stack.pop();
+        if (p < 0 || p >= w * h || visited[p]) continue;
+        const idx = p * 4;
+        if (data[idx + 3] === 0 || isNearWhite(idx)) {
+          visited[p] = 1;
+          data[idx + 3] = 0; // 設為全透明
+          const x = p % w;
+          const y = (p / w) | 0;
+          if (x > 0) stack.push(p - 1);
+          if (x < w - 1) stack.push(p + 1);
+          if (y > 0) stack.push(p - w);
+          if (y < h - 1) stack.push(p + w);
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+      imgEl.src = canvas.toDataURL("image/png");
+    } catch (e) {}
+  }
+
   function renderFilterBar() {
     const bar = document.getElementById("filterBar");
     bar.innerHTML = "";
@@ -571,7 +570,7 @@
       btn.textContent = cat;
       btn.onclick = () => {
         currentFilter = cat;
-        currentSubFilter = "全部"; // 切換主分頁時重置子分頁
+        currentSubFilter = "全部";
         renderFilterBar();
         renderSubFilterBar();
         renderGrid();
@@ -580,31 +579,25 @@
     });
   }
 
-  // 渲染第二層子分頁（自動偵測該主分頁底下有哪些 subCategory）
   function renderSubFilterBar() {
     const subBar = document.getElementById("subFilterBar");
     subBar.innerHTML = "";
-
     if (currentFilter === "全部足跡") {
       subBar.classList.remove("show");
       return;
     }
 
-    // 找出目前主分頁底下所有的 subCategory
     const itemsInCat = STICKERS.filter(s => belongsToCategory(s, currentFilter));
     const subCats = [...new Set(itemsInCat.map(s => s.subCategory).filter(Boolean))];
 
-    // 如果這個分頁底下有設定 subCategory，就自動展開第二層子分頁列！
     if (subCats.length > 0) {
       subBar.classList.add("show");
-      
       const label = document.createElement("span");
       label.className = "sub-filter-label";
-      label.textContent = "📂 系列篩選：";
+      label.textContent = "📂 系列：";
       subBar.appendChild(label);
 
-      const allSubCats = ["全部", ...subCats];
-      allSubCats.forEach(sub => {
+      ["全部", ...subCats].forEach(sub => {
         const btn = document.createElement("button");
         btn.className = `sub-filter-btn ${sub === currentSubFilter ? "active" : ""}`;
         btn.textContent = sub === "全部" ? `全部${currentFilter}` : sub;
@@ -620,7 +613,6 @@
     }
   }
 
-  // 圖片載入失敗時：先嘗試 images/ 子資料夾，若還沒上傳圖片則顯示純文字虛線章
   function handleImgError(imgEl, rawSrc, title) {
     if (!imgEl.dataset.triedSubfolder && !rawSrc.startsWith("images/")) {
       imgEl.dataset.triedSubfolder = "true";
@@ -644,7 +636,7 @@
     }
 
     if (filtered.length === 0) {
-      grid.innerHTML = `<div class="empty-hint">「${currentFilter}」分頁目前還沒有收入印章喔，敬請期待下一段旅程！</div>`;
+      grid.innerHTML = `<div class="empty-hint">「${currentFilter}」分頁目前還沒有貼紙喔，敬請期待下一段旅程！</div>`;
     } else {
       filtered.forEach(item => {
         const isUnlocked = Boolean(collected[item.id]);
@@ -654,7 +646,7 @@
 
         card.innerHTML = `
           <div class="circle-slot">
-            <img src="${item.image}" alt="${item.title}" onerror="handleImgError(this, '${item.image}', '${item.title}')">
+            <img src="${item.image}" alt="${item.title}" onload="removeWhiteBox(this)" onerror="handleImgError(this, '${item.image}', '${item.title}')">
           </div>
           <div class="sticker-title">${item.title}</div>
           <div class="sticker-date">${isUnlocked ? collected[item.id] : "尚未點亮"}</div>
@@ -674,26 +666,26 @@
     const subcatEl = document.getElementById("modalSubcat");
 
     badge.className = `modal-badge ${isUnlocked ? "unlocked" : "locked"}`;
-    badge.textContent = isAutoPop ? "🎉 恭喜蓋下新紀念章！" : (isUnlocked ? `✓ 已蓋章於 ${unlockDate}` : "🔒 尚未點亮");
+    badge.textContent = isAutoPop ? "🎉 恭喜點亮新記憶貼紙！" : (isUnlocked ? `✓ 已點亮於 ${unlockDate}` : "🔒 尚未點亮");
 
     wrap.className = `modal-stamp-wrap ${isUnlocked ? "" : "locked"}`;
-    wrap.innerHTML = `<img src="${item.image}" alt="${item.title}" onerror="handleImgError(this, '${item.image}', '${item.title}')">`;
+    wrap.innerHTML = `<img src="${item.image}" alt="${item.title}" onload="removeWhiteBox(this)" onerror="handleImgError(this, '${item.image}', '${item.title}')">`;
     
-    subcatEl.textContent = item.subCategory ? `📖 系列：${item.subCategory}` : "";
+    subcatEl.textContent = item.subCategory ? `📖 ${item.subCategory}` : "";
     document.getElementById("modalTitle").textContent = item.title;
 
     const cleanDesc = (item.desc && item.desc.trim()) ? item.desc : `紀錄於《${item.title}》的美好旅途記憶。`;
     document.getElementById("modalDesc").textContent = isUnlocked 
       ? cleanDesc
-      : `這枚印章尚未點亮！前往方格子閱讀《${item.title}》，點擊文末連結即可蓋章收藏。`;
+      : `這枚貼紙尚未點亮！前往方格子閱讀《${item.title}》，點擊文末連結即可點亮收藏。`;
     
     const linkBtn = document.getElementById("modalLink");
     linkBtn.href = item.articleUrl;
     if (isAutoPop) {
-      linkBtn.textContent = "收下印章，查看我的圖鑑 ✨";
+      linkBtn.textContent = "收下貼紙，查看我的圖鑑 ✨";
       linkBtn.onclick = (e) => { e.preventDefault(); closeModal(); };
     } else {
-      linkBtn.textContent = isUnlocked ? "重溫這篇方格子遊記" : "前往方格子閱讀並蓋章 →";
+      linkBtn.textContent = isUnlocked ? "重溫這篇方格子遊記" : "前往方格子閱讀並點亮 →";
       linkBtn.onclick = null;
     }
     modal.classList.add("show");
@@ -720,13 +712,12 @@
         collected[found.id] = collected[found.id] || today;
         saveCollected(collected);
 
-        // 自動幫讀者切換到該印章所屬的分頁，或維持在全部足跡
         renderFilterBar();
         renderSubFilterBar();
         renderGrid(found.id);
 
         const toast = document.getElementById("unlockToast");
-        toast.textContent = `✨ 成功點亮「${found.title}」紀念印章！`;
+        toast.textContent = `✨ 成功點亮「${found.title}」記憶貼紙！`;
         toast.classList.add("show");
         openModal(found, true, collected[found.id], true);
 
